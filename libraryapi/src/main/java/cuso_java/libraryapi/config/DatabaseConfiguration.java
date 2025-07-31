@@ -1,5 +1,7 @@
 package cuso_java.libraryapi.config;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,4 +31,22 @@ public class DatabaseConfiguration {
 //        ds.setDriverClassName(driverClassName);
 //        return ds;
 //    }
+
+    @Bean
+    public DataSource hikariDataSource() {
+        HikariConfig config = new HikariConfig();
+        config.setJdbcUrl(url);
+        config.setUsername(username);
+        config.setPassword(password);
+        config.setDriverClassName(driverClassName);
+
+        config.setMaximumPoolSize(10);// máximo de conexões liberadas
+        config.setMinimumIdle(1); //minimo de conexões liberada
+        config.setPoolName("HikariPool");
+        config.setMaxLifetime(600000);//600ms 10min
+        config.setConnectionTimeout(10000); //
+        config.setConnectionTestQuery("SELECT 1"); //tertar conexão com o banco
+
+        return new HikariDataSource(config);
+    }
 }
