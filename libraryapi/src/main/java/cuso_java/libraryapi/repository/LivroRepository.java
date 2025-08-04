@@ -68,4 +68,6 @@ public interface LivroRepository extends JpaRepository<Livro, UUID> {
     @Transactional
     void updateDataPublicacao(UUID id, LocalDate dataPublicacao);
 
+    Boolean existsByAutor(Autor autor);
+
 }

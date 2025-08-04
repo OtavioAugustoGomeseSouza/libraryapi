@@ -35,7 +35,7 @@ class LivroRepositoryTest {
         livro.setGenero(GeneroLivro.CIENCIA);
         livro.setPreco(BigDecimal.valueOf(10.40));
 
-        UUID uuidAutor= UUID.fromString("1411f00f-0b78-4e39-8469-2737ad09e89f");
+        UUID uuidAutor= UUID.fromString("d35fbc9c-3e41-455a-9cfa-68c07f24568a");
 
         Autor autor = autorRepository
                 .findById(uuidAutor)

@@ -5,22 +5,22 @@ import cuso_java.libraryapi.model.GeneroLivro;
 import cuso_java.libraryapi.model.Livro;
 import cuso_java.libraryapi.repository.AutorRepository;
 import cuso_java.libraryapi.repository.LivroRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class TransacaoService {
 
-    @Autowired
-    AutorRepository autorRepository;
-
-    @Autowired
-    LivroRepository livroRepository;
+    private final AutorRepository autorRepository;
+    private final LivroRepository livroRepository;
 
     @Transactional
     public void executarTransacao(){

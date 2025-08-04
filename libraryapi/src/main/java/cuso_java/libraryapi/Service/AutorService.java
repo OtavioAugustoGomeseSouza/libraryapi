@@ -1,8 +1,13 @@
 package cuso_java.libraryapi.Service;
 
+import cuso_java.libraryapi.exceptions.OperacaoNaoPermitidaException;
 import cuso_java.libraryapi.model.Autor;
 import cuso_java.libraryapi.repository.AutorRepository;
+import cuso_java.libraryapi.repository.LivroRepository;
+import cuso_java.libraryapi.validator.AutorValidator;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,15 +15,16 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class AutorService {
 
     private final AutorRepository autorRepository;
+    private final LivroRepository livroRepository;
+    private final AutorValidator autorValidator;
 
-    public AutorService(AutorRepository respository) {
-        this.autorRepository = respository;
-    }
 
     public Autor salvarAutor(Autor autor){
+        autorValidator.validar(autor);
         return autorRepository.save(autor);
     }
 
@@ -27,6 +33,9 @@ public class AutorService {
     }
 
     public void deletar(Autor autor){
+        if(possuiLivro(autor)){
+            throw new OperacaoNaoPermitidaException("Não é possível excluir autor com livros cadastrados");
+        }
         autorRepository.delete(autor);
     }
 
@@ -43,6 +52,11 @@ public class AutorService {
     }
 
     public void atualizar(Autor autor){
+        autorValidator.validar(autor);
         autorRepository.save(autor);
+    }
+
+    public boolean possuiLivro(Autor autor){
+        return livroRepository.existsByAutor(autor);
     }
 }
