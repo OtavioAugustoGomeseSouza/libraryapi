@@ -7,6 +7,7 @@ import cuso_java.libraryapi.exceptions.OperacaoNaoPermitidaException;
 import cuso_java.libraryapi.exceptions.RegistroDuplicadoException;
 import cuso_java.libraryapi.model.Autor;
 import jakarta.persistence.GeneratedValue;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +30,7 @@ public class AutorController {
 
 
     @PostMapping
-    public ResponseEntity<Object> salvar(@RequestBody AutorDTO autor){
+    public ResponseEntity<Object> salvar(@RequestBody @Valid AutorDTO autor){
         try {
             Autor autorEntidade = autor.mapearParaAutor();
             autorService.salvarAutor(autorEntidade);
@@ -90,7 +91,7 @@ public class AutorController {
             @RequestParam(value = "nome", required = false) String nome,
             @RequestParam(value = "nacionalidade", required = false)String nacionalidade){
 
-        List<Autor> listaAutor = autorService.pesquisar(nome, nacionalidade);
+        List<Autor> listaAutor = autorService.pesquisaByExample(nome, nacionalidade);
         List<AutorDTO> listDto = new ArrayList<>();
 
         for(Autor autor : listaAutor){
@@ -104,7 +105,7 @@ public class AutorController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Object> atualizar(@PathVariable("id") String id,@RequestBody AutorDTO autorDTO){
+    public ResponseEntity<Object> atualizar(@PathVariable("id") String id,@RequestBody @Valid AutorDTO autorDTO){
         try {
             UUID idAutor = UUID.fromString(id);
             Optional<Autor> autorOptional = autorService.obterPorId(idAutor);
