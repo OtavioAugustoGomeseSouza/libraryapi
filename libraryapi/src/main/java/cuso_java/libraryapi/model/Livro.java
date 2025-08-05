@@ -4,15 +4,20 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
 import org.apache.logging.log4j.util.Lazy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
 @Table(name= "livro")
 @Data
 @ToString(exclude = "autor")
+@EntityListeners(AuditingEntityListener.class)
 public class Livro {
     @Id
     @Column(name = "id")
@@ -45,5 +50,16 @@ public class Livro {
     @Enumerated(EnumType.STRING)
     @Column(name = "genero")
     private GeneroLivro genero;
+
+    @LastModifiedDate
+    @Column(name = "data_atualizacao")
+    private LocalDateTime dataAtualizacao;
+
+    @CreatedDate
+    @Column(name = "data_cadastro")
+    private LocalDateTime dataCadastro;
+
+    @Column(name = "id_usuario")
+    private UUID idUsuario;
 
 }

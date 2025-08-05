@@ -2,6 +2,8 @@ package cuso_java.libraryapi.controller.common;
 
 import cuso_java.libraryapi.controller.dto.ErroCampo;
 import cuso_java.libraryapi.controller.dto.ErroReposta;
+import cuso_java.libraryapi.exceptions.OperacaoNaoPermitidaException;
+import cuso_java.libraryapi.exceptions.RegistroDuplicadoException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -26,5 +28,26 @@ public class GlobalExceptionHandler {
         }
         return  new ErroReposta(HttpStatus.UNPROCESSABLE_ENTITY.value(), "Erro validação",erroCampos);
 
+    }
+
+    @ExceptionHandler(RegistroDuplicadoException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErroReposta handleRegistroDuplicadoException(RegistroDuplicadoException e){
+        return ErroReposta.conflito(e.getMessage());
+
+    }
+
+    @ExceptionHandler(OperacaoNaoPermitidaException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErroReposta handleOperacaoNaoPermitida(OperacaoNaoPermitidaException e){
+        return ErroReposta.respostaPadrao(e.getMessage());
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErroReposta handleErrosNaoTratados(RuntimeException e){
+        return new ErroReposta(HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                "Ocorreu um erro inesperado. Entre em contato com um admin",
+                List.of());
     }
 }
