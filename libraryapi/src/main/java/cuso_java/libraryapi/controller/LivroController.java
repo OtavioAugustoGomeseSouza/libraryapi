@@ -3,15 +3,16 @@ package cuso_java.libraryapi.controller;
 import cuso_java.libraryapi.Service.LivroService;
 import cuso_java.libraryapi.controller.dto.CadastroLivroDTO;
 import cuso_java.libraryapi.controller.dto.ErroReposta;
+import cuso_java.libraryapi.controller.dto.ResultadoPesquisaLivroDTO;
 import cuso_java.libraryapi.controller.mappers.LivroMapper;
 import cuso_java.libraryapi.model.Livro;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/livros")
@@ -37,5 +38,18 @@ public class LivroController implements GenericController {
         //retornar codigo created com header location
         return ResponseEntity.created(url).build();
 
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<ResultadoPesquisaLivroDTO> obterDetalhes(@PathVariable String id) {
+
+        Optional<Livro> livroOptional = livroService.obterPorId(UUID.fromString(id));
+
+        if (livroOptional.isPresent()) {
+            ResultadoPesquisaLivroDTO livroDTO = livroMapper.toDTO(livroOptional.get());
+            return ResponseEntity.ok(livroDTO);
+        }
+
+        return ResponseEntity.notFound().build();
     }
 }
