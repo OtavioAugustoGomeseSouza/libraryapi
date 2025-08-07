@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Optional;
 
-
+//Se estiver dando erro aqui só comentar os mappers, compilar, descomentar e compilar novamente
 @Mapper(componentModel = "spring", uses = AutorMapper.class)
 public abstract class LivroMapper {
 
