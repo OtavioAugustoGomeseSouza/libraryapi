@@ -2,6 +2,7 @@ package cuso_java.libraryapi.controller.common;
 
 import cuso_java.libraryapi.controller.dto.ErroCampo;
 import cuso_java.libraryapi.controller.dto.ErroReposta;
+import cuso_java.libraryapi.exceptions.CampoInvalidoException;
 import cuso_java.libraryapi.exceptions.OperacaoNaoPermitidaException;
 import cuso_java.libraryapi.exceptions.RegistroDuplicadoException;
 import org.springframework.http.HttpStatus;
@@ -43,6 +44,15 @@ public class GlobalExceptionHandler {
         return ErroReposta.respostaPadrao(e.getMessage());
     }
 
+    @ExceptionHandler(CampoInvalidoException.class)
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    public ErroReposta handleCampoInvalidoException(CampoInvalidoException e){
+        return new ErroReposta(
+                HttpStatus.UNPROCESSABLE_ENTITY.value(),
+                "Erro de validação.",
+                List.of(new ErroCampo(e.getCampo(), e.getMessage())));
+    }
+
     @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErroReposta handleErrosNaoTratados(RuntimeException e){
@@ -50,4 +60,5 @@ public class GlobalExceptionHandler {
                 "Ocorreu um erro inesperado. Entre em contato com um admin",
                 List.of());
     }
+
 }
