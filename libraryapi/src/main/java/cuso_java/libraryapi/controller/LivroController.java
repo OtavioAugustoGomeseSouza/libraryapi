@@ -33,7 +33,9 @@ public class LivroController implements GenericController {
         Livro livro = livroMapper.toEntity(cadastroLivroDTO);
 
         //enviar a entidade para o serviçe validar e salvar na base
+
         livroService.salvar(livro);
+
 
         //criar url para acesso dos dados do livro
         var url = gerarHeaderLocation(livro.getId());

@@ -4,6 +4,7 @@ import cuso_java.libraryapi.model.GeneroLivro;
 import cuso_java.libraryapi.model.Livro;
 import cuso_java.libraryapi.repository.LivroRepository;
 import cuso_java.libraryapi.repository.specs.LivroSpecs;
+import cuso_java.libraryapi.validator.LivroValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -17,8 +18,10 @@ import java.util.UUID;
 public class LivroService {
 
     private final LivroRepository livroRepository;
+    private final LivroValidator livroValidator;
 
     public Livro salvar(Livro livro) {
+        livroValidator.validar(livro);
         return livroRepository.save(livro);
     }
 
@@ -74,6 +77,7 @@ public class LivroService {
             throw new IllegalArgumentException("Para atualizar,é necessário que o livro já esteja salvo na base de dados");
         }
 
+        livroValidator.validar(livro);
         livroRepository.save(livro);
     }
 }
