@@ -6,6 +6,9 @@ import cuso_java.libraryapi.repository.LivroRepository;
 import cuso_java.libraryapi.repository.specs.LivroSpecs;
 import cuso_java.libraryapi.validator.LivroValidator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -34,11 +37,13 @@ public class LivroService {
     }
 
     //isbn, titulo, nome autor, genero e ano da publicação
-    public List<Livro> pesquisa(String isbn,
+    public Page<Livro> pesquisa(String isbn,
                                 String nomeAutor,
                                 String titulo,
                                 GeneroLivro genero,
-                                Integer anoPublicacao){
+                                Integer anoPublicacao,
+                                Integer pagina,
+                                Integer tamanhoPagina){
 
 
 //        Specification<Livro> specs = Specification
@@ -69,7 +74,9 @@ public class LivroService {
             specs = specs.and(LivroSpecs.nomeAutorLike(nomeAutor));
         }
 
-        return livroRepository.findAll(specs);
+        Pageable pageRequest = PageRequest.of(pagina,tamanhoPagina);
+
+        return livroRepository.findAll(specs, pageRequest);
     }
 
     public void atualizar(Livro livro) {

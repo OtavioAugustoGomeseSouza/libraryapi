@@ -9,6 +9,7 @@ import cuso_java.libraryapi.model.GeneroLivro;
 import cuso_java.libraryapi.model.Livro;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -70,19 +71,19 @@ public class LivroController implements GenericController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ResultadoPesquisaLivroDTO>> pesquisar(@RequestParam(value = "isbn", required = false) String isbn,
+    public ResponseEntity<Page<ResultadoPesquisaLivroDTO>> pesquisar(@RequestParam(value = "isbn", required = false) String isbn,
                                                                      @RequestParam(value = "nomeAutor", required = false) String nomeAutor,
                                                                      @RequestParam(value = "titulo", required = false) String titulo,
                                                                      @RequestParam(value = "genero", required = false) GeneroLivro genero,
+                                                                     @RequestParam(value = "pagina", defaultValue = "0") Integer pagina,
+                                                                     @RequestParam(value = "tamanho-pagina",defaultValue = "10")  Integer tamanhoPagina,
                                                                      @RequestParam(value = "anoPublicacao", required = false) Integer anoPublicacao){
 
-        List<ResultadoPesquisaLivroDTO> listaDTO= new ArrayList<>();
-        List<Livro> livros = livroService.pesquisa(isbn,nomeAutor,titulo,genero,anoPublicacao);
 
-        for (Livro livro : livros) {
-            listaDTO.add(livroMapper.toDTO(livro));
-        }
-        return listaDTO.isEmpty()?ResponseEntity.notFound().build():ResponseEntity.ok(listaDTO);
+        Page<Livro> livros = livroService.pesquisa(isbn,nomeAutor,titulo,genero,anoPublicacao, pagina, tamanhoPagina);
+        Page<ResultadoPesquisaLivroDTO> resultado = livros.map(livroMapper::toDTO);
+
+        return ResponseEntity.ok(resultado);
     }
 
     @PutMapping("{id}")

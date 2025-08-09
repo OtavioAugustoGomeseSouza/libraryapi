@@ -6,6 +6,7 @@ import cuso_java.libraryapi.controller.mappers.AutorMapper;
 import cuso_java.libraryapi.model.Autor;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -68,17 +69,16 @@ public class AutorController implements GenericController {
     }
 
     @GetMapping
-    public ResponseEntity<List<AutorDTO>> pesquisar(
+    public ResponseEntity<Page<AutorDTO>> pesquisar(
             @RequestParam(value = "nome", required = false) String nome,
-            @RequestParam(value = "nacionalidade", required = false) String nacionalidade) {
+            @RequestParam(value = "nacionalidade", required = false) String nacionalidade,
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "tamanho-pagina", defaultValue = "10") Integer tamanhoPagina) {
 
-        List<Autor> listaAutor = autorService.pesquisaByExample(nome, nacionalidade);
-        List<AutorDTO> listDto = new ArrayList<>();
+        Page<Autor> listaAutor = autorService.pesquisaByExample(nome, nacionalidade,page, tamanhoPagina);
+        Page<AutorDTO> listaDTO =listaAutor.map((autorMapper::toDto));
 
-        for (Autor autor : listaAutor) {
-            AutorDTO autorDTO = autorMapper.toDto(autor);
-        }
-        return ResponseEntity.ok(listDto);
+        return ResponseEntity.ok(listaDTO);
     }
 
     @PutMapping("{id}")

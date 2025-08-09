@@ -6,8 +6,7 @@ import cuso_java.libraryapi.repository.AutorRepository;
 import cuso_java.libraryapi.repository.LivroRepository;
 import cuso_java.libraryapi.validator.AutorValidator;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -51,7 +50,7 @@ public class AutorService {
         }
     }
 
-    public List<Autor> pesquisaByExample(String nome, String nacionalidade){
+    public Page<Autor> pesquisaByExample(String nome, String nacionalidade, Integer pagina, Integer tamanhoPagina){
         Autor autor = new Autor();
         autor.setNome(nome);
         autor.setNacionalidade(nacionalidade);
@@ -62,7 +61,8 @@ public class AutorService {
                 .withIgnorePaths("id", "dataNascimento", "dataCadastro")
                 .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
         Example<Autor> autorExample= Example.of(autor, matcher);
-        return autorRepository.findAll(autorExample);
+        Pageable pageRequest = PageRequest.of(pagina,tamanhoPagina);
+        return autorRepository.findAll(autorExample, pageRequest);
     }
 
     public void atualizar(Autor autor){
