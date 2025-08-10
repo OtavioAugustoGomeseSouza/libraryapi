@@ -16,7 +16,7 @@ import java.util.UUID;
 @Entity
 @Table(name= "livro")
 @Data
-@ToString(exclude = "autor")
+@ToString(exclude = {"autor","cliente"})
 @EntityListeners(AuditingEntityListener.class)
 public class Livro {
     @Id
@@ -61,5 +61,9 @@ public class Livro {
 
     @Column(name = "id_usuario")
     private UUID idUsuario;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_cliente")
+    private Cliente cliente;
 
 }

@@ -8,9 +8,19 @@ CREATE table autor(
 	id_usuario uuid
 );
 
+CREATE table cliente(
+	id uuid not null primary key,
+	nome varchar(100) not null,
+	cpf varchar(14) unique not null,
+	email varchar(100),
+	telefone varchar(20),
+	data_cadastro timestamp,
+    data_atualizacao timestamp
+);
+
 CREATE table livro(
 	id uuid not null primary key,
-	isbn varchar(20) not null unique,
+	isbn varchar(20) not null,
 	titulo varchar(150) not null,
 	data_publicacao date not null,
 	genero varchar(30) not null,
@@ -19,6 +29,7 @@ CREATE table livro(
     data_atualizacao timestamp,
     id_usuario uuid,
 	id_autor uuid not null references autor(id),
+	id_cliente uuid references cliente(id),
 	constraint chk_genero check (genero in ('FICCAO', 'FANTASIA', 'MISTERIO', 'ROMANCE', 'BIOGRAFIA', 'CIENCIA'))
 
 );

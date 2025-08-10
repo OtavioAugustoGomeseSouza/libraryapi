@@ -1,6 +1,7 @@
 package cuso_java.libraryapi.repository;
 
 import cuso_java.libraryapi.model.Autor;
+import cuso_java.libraryapi.model.Cliente;
 import cuso_java.libraryapi.model.GeneroLivro;
 import cuso_java.libraryapi.model.Livro;
 import jakarta.persistence.GeneratedValue;
@@ -26,6 +27,8 @@ public interface LivroRepository extends JpaRepository<Livro, UUID>, JpaSpecific
 
     //Select * From livros where id_autor = "UUID_autor"
     List<Livro> findByAutor(Autor autor);
+
+    List<Livro> findByCliente(Cliente cliente);
 
     List<Livro> findByTitulo(String titulo);
 
