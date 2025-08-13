@@ -1,5 +1,6 @@
 package cuso_java.libraryapi.Service;
 
+import cuso_java.libraryapi.model.Cliente;
 import cuso_java.libraryapi.model.GeneroLivro;
 import cuso_java.libraryapi.model.Livro;
 import cuso_java.libraryapi.repository.LivroRepository;
@@ -86,5 +87,9 @@ public class LivroService {
 
         livroValidator.validar(livro);
         livroRepository.save(livro);
+    }
+
+    public List<Livro> obterLivrosCliente(Cliente cliente) {
+        return livroRepository.findByCliente(cliente);
     }
 }

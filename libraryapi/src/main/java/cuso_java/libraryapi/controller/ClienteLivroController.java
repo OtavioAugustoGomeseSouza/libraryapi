@@ -1,11 +1,15 @@
 package cuso_java.libraryapi.controller;
 
 import cuso_java.libraryapi.Service.ClienteLivroService;
+import cuso_java.libraryapi.controller.dto.ClienteLivroDTO;
+import cuso_java.libraryapi.model.Cliente;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -27,6 +31,16 @@ public class ClienteLivroController implements GenericController {
         // Location pode apontar para a listagem dos livros do cliente
         URI location = URI.create("/clientes/" + idCliente + "/livros");
         return ResponseEntity.created(location).build();
+    }
+
+    @GetMapping
+    public ResponseEntity<ClienteLivroDTO> buscarClienteLivros(@PathVariable String idCliente) {
+       try {
+           ClienteLivroDTO cliente = clienteLivroService.buscarCliente(UUID.fromString(idCliente));
+           return ResponseEntity.ok().body(cliente);
+       }catch (NoSuchElementException e) {
+           return ResponseEntity.notFound().build();
+       }
     }
 
 
