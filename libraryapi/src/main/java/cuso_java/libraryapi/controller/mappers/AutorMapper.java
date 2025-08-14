@@ -9,7 +9,7 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface AutorMapper {
 
-    @Mapping(source = "idAutor", target = "id")
+   @Mapping(source = "idAutor", target = "id")
     Autor toEntity(AutorDTO dto);
 
     @Mapping(source = "id", target = "idAutor")
