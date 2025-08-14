@@ -2,6 +2,7 @@ package cuso_java.libraryapi.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -25,7 +26,18 @@ public class SecurityConfiguration {
                 .formLogin(configurer ->
                             {configurer.loginPage("/login").permitAll();})
                 .httpBasic(Customizer.withDefaults())
-                .authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated())
+                .authorizeHttpRequests(authorize ->
+                {
+                    authorize.requestMatchers("/login").permitAll();
+                    authorize.requestMatchers(HttpMethod.POST,"/autores/**").hasRole("ADMIN");
+                    authorize.requestMatchers(HttpMethod.DELETE,"/autores/**").hasRole("ADMIN");
+                    authorize.requestMatchers(HttpMethod.PUT,"/autores/**").hasRole("ADMIN");
+                    authorize.requestMatchers(HttpMethod.GET,"/autores/**").hasAnyRole("USER","ADMIN");
+                    authorize.requestMatchers("/livros/*/devolver").hasRole("ADMIN");
+                    authorize.requestMatchers("/livros/**").hasAnyRole("USER", "ADMIN");
+                    authorize.requestMatchers("/clientes/*/livros/**").hasRole("ADMIN");
+                    authorize.anyRequest().authenticated();
+                })
                 .build();
     }
 
@@ -38,7 +50,7 @@ public class SecurityConfiguration {
     public UserDetailsService userDetailService(PasswordEncoder passwordEncoder) {
 
         UserDetails user1 = User.builder()
-                .username("usuario")
+                .username("user")
                 .password(passwordEncoder.encode("123"))
                 .roles("USER")
                 .build();
