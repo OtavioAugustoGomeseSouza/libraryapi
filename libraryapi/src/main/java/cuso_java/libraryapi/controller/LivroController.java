@@ -5,11 +5,13 @@ import cuso_java.libraryapi.controller.dto.CadastroLivroDTO;
 import cuso_java.libraryapi.controller.dto.ErroReposta;
 import cuso_java.libraryapi.controller.dto.ResultadoPesquisaLivroDTO;
 import cuso_java.libraryapi.controller.mappers.LivroMapper;
+import cuso_java.libraryapi.exceptions.OperacaoNaoPermitidaException;
 import cuso_java.libraryapi.model.GeneroLivro;
 import cuso_java.libraryapi.model.Livro;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -108,5 +110,18 @@ public class LivroController implements GenericController {
         }
 
         return ResponseEntity.notFound().build();
+    }
+
+    @PostMapping("/{idLivro}/devolver")
+    public ResponseEntity<Object> devolver(@PathVariable("idLivro") String idLivro){
+
+        UUID id = UUID.fromString(idLivro);
+        Optional<Livro> livroOptional = livroService.obterPorId(id);
+        if (livroOptional.isPresent()) {
+            livroService.devolver(livroOptional.get());
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
+
     }
 }

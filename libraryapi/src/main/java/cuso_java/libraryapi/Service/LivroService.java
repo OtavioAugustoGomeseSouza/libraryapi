@@ -1,5 +1,6 @@
 package cuso_java.libraryapi.Service;
 
+import cuso_java.libraryapi.exceptions.OperacaoNaoPermitidaException;
 import cuso_java.libraryapi.model.Cliente;
 import cuso_java.libraryapi.model.GeneroLivro;
 import cuso_java.libraryapi.model.Livro;
@@ -91,5 +92,19 @@ public class LivroService {
 
     public List<Livro> obterLivrosCliente(Cliente cliente) {
         return livroRepository.findByCliente(cliente);
+    }
+
+    public void devolver(Livro livro) {
+        if(livro.getId() == null) {
+            throw new OperacaoNaoPermitidaException("O livro não foi encontrado na base de dados");
+        }
+
+        if (livro.getCliente() == null) {
+            throw new OperacaoNaoPermitidaException("O livro não está emprestado");
+        }
+
+        System.out.println("Livro atualizado com sucesso");
+        livro.setCliente(null);
+        livroRepository.save(livro);
     }
 }

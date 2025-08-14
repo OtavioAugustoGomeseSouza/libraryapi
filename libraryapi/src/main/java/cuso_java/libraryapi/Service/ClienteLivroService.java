@@ -42,6 +42,10 @@ public class ClienteLivroService {
     }
 
     public void devolver(UUID idCliente, UUID idLivro) {
+        var cliente = clienteService.obterPorID(idCliente);
+        if(cliente.isPresent()){
+            var livro = livroService.obterPorId(idLivro);
+        }
     }
 
     public ClienteLivroDTO buscarCliente(UUID uuid) {
