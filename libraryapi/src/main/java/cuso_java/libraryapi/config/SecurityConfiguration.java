@@ -1,5 +1,8 @@
 package cuso_java.libraryapi.config;
 
+import cuso_java.libraryapi.Service.UsuarioService;
+import cuso_java.libraryapi.model.Usuario;
+import cuso_java.libraryapi.security.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -48,19 +51,21 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public UserDetailsService userDetailService(PasswordEncoder passwordEncoder) {
+    public UserDetailsService userDetailService(UsuarioService usuarioService) {
 
-        UserDetails user1 = User.builder()
-                .username("user")
-                .password(passwordEncoder.encode("123"))
-                .roles("USER")
-                .build();
+//        UserDetails user1 = User.builder()
+//                .username("user")
+//                .password(passwordEncoder.encode("123"))
+//                .roles("USER")
+//                .build();
+//
+//        UserDetails user2 = User.builder()
+//                .username("admin")
+//                .password(passwordEncoder.encode("321"))
+//                .roles("ADMIN")
+//                .build();
+//        return  new InMemoryUserDetailsManager(user1, user2);
 
-        UserDetails user2 = User.builder()
-                .username("admin")
-                .password(passwordEncoder.encode("321"))
-                .roles("ADMIN")
-                .build();
-        return  new InMemoryUserDetailsManager(user1, user2);
+        return new CustomUserDetailsService(usuarioService);
     }
 }
